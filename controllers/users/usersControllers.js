@@ -1,5 +1,6 @@
 import { ObjectId } from 'mongodb';
 import clientPromise from '../../db/db.js';
+import {validationResult} from 'express-validator'
 
 export const getAllUsers = async (req, res) => {
     try {
@@ -14,6 +15,11 @@ export const getAllUsers = async (req, res) => {
 
 export const createSingleUser = async (req, res) => {
     try {
+        const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+      }
+  
         const client = await clientPromise;
         const db = client.db('bashar123');
         const user = req.body;
@@ -26,7 +32,12 @@ export const createSingleUser = async (req, res) => {
 };
 
 export const getSingleUser = async (req, res) => {
+    const errors = validationResult(req);
     try {
+        if (!errors.isEmpty()) {
+          return res.status(400).json({ errors: errors.array() });
+        }
+    
         const client = await clientPromise;
         const db = client.db('bashar123');
         const user = await db.collection('users').findOne({ _id: new ObjectId(req.params.id) });
@@ -36,7 +47,8 @@ export const getSingleUser = async (req, res) => {
         res.json(user);
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: 'Internal Server Error', error: error.message });
+        res.send(error)
+        // res.status(500).json({ message: 'Internal Server Error', error: error.message });
     }
 };
 
