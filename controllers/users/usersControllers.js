@@ -1,15 +1,27 @@
 import UserModel from '../../models/usersModel/usersModel.js';
 
+/**
+ * Get all users or search by name
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ * @returns {Promise<void>} - Responds with JSON array of users or an error message
+ */
 export const getAllUsers = async (req, res) => {
     try {
-        const {name}=req.query
-        const users = await UserModel.find(name&&{name});
+        const { name } = req.query;
+        const users = await UserModel.find(name && { name });
         res.json(users);
     } catch (error) {
         res.status(500).json({ message: 'Internal Server Error', error });
     }
 };
 
+/**
+ * Create a single user
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ * @returns {Promise<void>} - Responds with the created user or an error message
+ */
 export const createSingleUser = async (req, res) => {
     try {
         const user = new UserModel(req.body);
@@ -20,6 +32,12 @@ export const createSingleUser = async (req, res) => {
     }
 };
 
+/**
+ * Get a single user by ID
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ * @returns {Promise<void>} - Responds with the user object or an error message
+ */
 export const getSingleUser = async (req, res) => {
     try {
         const user = await UserModel.findById(req.params.id);
@@ -33,6 +51,12 @@ export const getSingleUser = async (req, res) => {
     }
 };
 
+/**
+ * Update a single user by ID
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ * @returns {Promise<void>} - Responds with the updated user object or an error message
+ */
 export const updateSingleUser = async (req, res) => {
     try {
         const user = await UserModel.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
@@ -46,6 +70,12 @@ export const updateSingleUser = async (req, res) => {
     }
 };
 
+/**
+ * Delete a single user by ID
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ * @returns {Promise<void>} - Responds with a success message or an error message
+ */
 export const deleteSingleUser = async (req, res) => {
     try {
         const user = await UserModel.findByIdAndDelete(req.params.id);
