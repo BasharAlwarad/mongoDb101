@@ -6,6 +6,7 @@ import cors from 'cors'
 
 // Routes
 import usersRoutes from './routes/users/usersRoutes.js'
+import productsRoutes from './routes/products/productsRoutes.js'
 
 dotenv.config()
 connectDB()
@@ -20,7 +21,8 @@ app.get('/', (req, res) => {
     }
 )
 
-app.use(`/api/v1/users`,usersRoutes)
+app.use(`/api/v1/users`, usersRoutes)
+app.use(`/api/v1/products`, productsRoutes)
 
 app.listen(8000, () => {
     console.log('Server is running on port 8000')

@@ -2,7 +2,8 @@ import UserModel from '../../models/usersModel/usersModel.js';
 
 export const getAllUsers = async (req, res) => {
     try {
-        const users = await UserModel.find();
+        const {name}=req.query
+        const users = await UserModel.find(name&&{name});
         res.json(users);
     } catch (error) {
         res.status(500).json({ message: 'Internal Server Error', error });
