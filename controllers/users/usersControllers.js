@@ -1,4 +1,7 @@
 import UserModel from '../../models/usersModel.js'
+
+
+
 /**
  * Get all users or search by name
  * @param {Object} req - Express request object

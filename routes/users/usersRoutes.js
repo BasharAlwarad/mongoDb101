@@ -3,7 +3,7 @@ import {getAllUsers,getSingleUser,createSingleUser,updateSingleUser,deleteSingle
 
 const router = Router();
 
-router.route(`/`).get(getAllUsers).post(createSingleUser)
+router.route(`/`).get(preventEddy,getAllUsers).post(createSingleUser)
 
 router.route(`/:id`).get(getSingleUser).put(updateSingleUser).delete(deleteSingleUser)
 
