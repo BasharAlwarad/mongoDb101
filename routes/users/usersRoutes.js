@@ -6,21 +6,17 @@ import {
   updateSingleUser,
   deleteSingleUser,
 } from '../../controllers/users/usersControllers.js';
-import {
-  isAdmin,
-  isAuthenticated,
-  isOwner,
-} from '../../middlewares/logging.js';
+import { isOwnerOrAdmin, isAuthenticated } from '../../middlewares/logging.js';
 
 const router = Router();
 
-router.get(`/`, isAuthenticated, isAdmin, getAllUsers);
+router.get('/', isAuthenticated, getAllUsers);
 
-router.post(`/`, createSingleUser);
+router.post('/', createSingleUser);
 
-router.get(`/:id`, isAuthenticated, getSingleUser);
+router.get('/:id', isAuthenticated, getSingleUser);
 
-router.use(isAuthenticated, isOwner);
-router.route(`/:id`).put(updateSingleUser).delete(deleteSingleUser);
+router.put('/:id', isAuthenticated, isOwnerOrAdmin, updateSingleUser);
+router.delete('/:id', isAuthenticated, isOwnerOrAdmin, deleteSingleUser);
 
 export default router;
