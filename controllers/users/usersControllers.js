@@ -1,4 +1,4 @@
-import UserModel from '../../models/usersModel.js';
+import User from '../../models/usersModel.js';
 
 /**
  * Get all users or search by name
@@ -12,13 +12,9 @@ export const getAllUsers = async (req, res) => {
 
     let users;
     if (name) {
-      users = await UserModel.find({ name });
-    } else if (type) {
-      users = await UserModel.find({ type });
-    } else if (name && type) {
-      users = await UserModel.find({ name, type });
+      users = await User.find({ name }).select('-password -isAdmin');
     } else {
-      users = await UserModel.find();
+      users = await User.find().select('-password -isAdmin');
     }
 
     res.json(users);
@@ -35,7 +31,7 @@ export const getAllUsers = async (req, res) => {
  */
 export const createSingleUser = async (req, res) => {
   try {
-    const user = new UserModel(req.body);
+    const user = new User(req.body);
     const createdUser = await user.save();
     res.json(createdUser);
   } catch (error) {
@@ -51,7 +47,9 @@ export const createSingleUser = async (req, res) => {
  */
 export const getSingleUser = async (req, res) => {
   try {
-    const user = await UserModel.findById(req.params.id);
+    const user = await User.findById(req.params.id).select(
+      '-password -isAdmin'
+    );
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
@@ -72,10 +70,10 @@ export const getSingleUser = async (req, res) => {
  */
 export const updateSingleUser = async (req, res) => {
   try {
-    const user = await UserModel.findByIdAndUpdate(req.params.id, req.body, {
+    const user = await User.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
       runValidators: true,
-    });
+    }).select('-password -isAdmin');
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
@@ -96,7 +94,7 @@ export const updateSingleUser = async (req, res) => {
  */
 export const deleteSingleUser = async (req, res) => {
   try {
-    const user = await UserModel.findByIdAndDelete(req.params.id);
+    const user = await User.findByIdAndDelete(req.params.id);
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
